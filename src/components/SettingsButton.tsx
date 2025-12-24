@@ -1,6 +1,6 @@
-import { useRef } from "preact/hooks";
-import { appConfig, saveConfig } from "../lib/utils.ts";
+import { appConfig, saveConfig } from "../lib/utils";
 import Button from "./Button";
+import { createRef, RefObject } from "preact";
 
 type Position = "top-right" | "top-left" | "bottom-right" | "bottom-left";
 
@@ -11,12 +11,8 @@ const POSITION_CLASSES: Record<Position, string> = {
   "top-right": "top-4 right-4",
 };
 
-interface SettingsButtonProps {
-  position?: Position;
-}
-
-function SettingsButton({ position = "top-right" }: SettingsButtonProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
+function SettingsButton({ position = "top-right" }: { position?: Position }) {
+  const dialogRef: RefObject<HTMLDialogElement> = createRef();
   const positionClass = POSITION_CLASSES[position];
 
   const updateFont = (
@@ -34,18 +30,17 @@ function SettingsButton({ position = "top-right" }: SettingsButtonProps) {
       <dialog
         ref={dialogRef}
         id="settingsDialog"
-        className="mx-auto my-auto w-[90dvw] max-w-md rounded-xl border border-black/10 bg-[Canvas] p-6 text-[CanvasText] shadow-lg backdrop:bg-black/50 dark:border-white/10"
+        className="mx-auto my-auto w-[90dvw] max-w-lg justify-between rounded-xl border border-black/10 bg-[Canvas] p-6 text-[CanvasText] shadow-lg backdrop:bg-black/50 dark:border-white/10"
       >
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xl font-semibold">Settings</h2>
+        <div className="space-y-8">
+          <h2 className="text-2xl font-semibold">Settings</h2>
 
           <div className="flex items-start justify-between">
-            <label htmlFor="font-select">Font</label>
+            <label>Font</label>
             <div className="max-w-min space-y-4">
               <select
-                id="font-select"
                 value={appConfig.value.font.type}
-                className="min-w-full cursor-pointer rounded-lg bg-black/10 px-3 py-1.5 transition-colors hover:bg-black/20 dark:bg-white/10 hover:dark:bg-white/20"
+                className="min-w-full cursor-pointer rounded-xl bg-black/10 px-3 py-1.5 transition-colors hover:bg-black/20 dark:bg-white/10 hover:dark:bg-white/20"
                 onChange={(e) => {
                   const val = e.currentTarget.value as
                     | "google-sans-code"
@@ -69,13 +64,13 @@ function SettingsButton({ position = "top-right" }: SettingsButtonProps) {
             </div>
           </div>
 
-          <button
+          <Button
             onClick={() => dialogRef.current?.close()}
+            className="w-full"
             autoFocus
-            className="mt-2 cursor-pointer rounded-xl bg-black/10 px-4 py-2 transition-colors hover:bg-black/20 dark:bg-white/10 hover:dark:bg-white/20"
           >
             Close
-          </button>
+          </Button>
         </div>
       </dialog>
 
