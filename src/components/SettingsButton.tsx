@@ -1,6 +1,5 @@
 import { appConfig, saveConfig } from "../lib/utils";
 import Button from "./Button";
-import { createRef, RefObject } from "preact";
 
 type Position = "top-right" | "top-left" | "bottom-right" | "bottom-left";
 
@@ -12,7 +11,6 @@ const POSITION_CLASSES: Record<Position, string> = {
 };
 
 function SettingsButton({ position = "top-right" }: { position?: Position }) {
-  const dialogRef: RefObject<HTMLDialogElement> = createRef();
   const positionClass = POSITION_CLASSES[position];
 
   const updateFont = (
@@ -28,8 +26,7 @@ function SettingsButton({ position = "top-right" }: { position?: Position }) {
   return (
     <>
       <dialog
-        ref={dialogRef}
-        id="settingsDialog"
+        id="settings-dialog"
         className="mx-auto my-auto w-[90dvw] max-w-lg justify-between rounded-xl border border-black/10 bg-[Canvas] p-6 text-[CanvasText] shadow-lg backdrop:bg-black/50 dark:border-white/10"
       >
         <div className="space-y-8">
@@ -65,7 +62,7 @@ function SettingsButton({ position = "top-right" }: { position?: Position }) {
           </div>
 
           <Button
-            onClick={() => dialogRef.current?.close()}
+            commandfor="settings-dialog" command="close"
             className="w-full"
             autoFocus
           >
@@ -75,9 +72,8 @@ function SettingsButton({ position = "top-right" }: { position?: Position }) {
       </dialog>
 
       <Button
-        id="settingsButton"
+        commandfor="settings-dialog" command="show-modal"
         className={`absolute ${positionClass}`}
-        onClick={() => dialogRef.current?.showModal()}
       >
         Settings
       </Button>
